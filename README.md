@@ -1,9 +1,4 @@
-# spans
-
-[![GoDoc](https://pkg.go.dev/badge/github.com/byExist/spans.svg)](https://pkg.go.dev/github.com/byExist/spans)
-[![Go Report Card](https://goreportcard.com/badge/github.com/byExist/spans)](https://goreportcard.com/report/github.com/byExist/spans)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
+# spans [![GoDoc](https://pkg.go.dev/badge/github.com/byExist/spans.svg)](https://pkg.go.dev/github.com/byExist/spans) [![Go Report Card](https://goreportcard.com/badge/github.com/byExist/spans)](https://goreportcard.com/report/github.com/byExist/spans) 
 
 ## What is spans?
 
@@ -83,3 +78,7 @@ The spans package allows you to easily create and manipulate integer ranges with
 - Find(s Span, elem int) (int, error)  
 - At(s Span, index int) (int, error)  
 - Slice(s Span, from, to int) (Span, error)  
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
