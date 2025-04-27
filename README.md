@@ -70,6 +70,12 @@ The spans package allows you to easily create and manipulate integer ranges with
 - Range(start, stop int) Span  
 - Stride(start, stop, step int) Span  
 
+### Methods
+
+- Start(s Span) int
+- Stop(s Span) int
+- Step(s Span) int
+
 ### Utilities
 
 - Values(s Span) iter.Seq[int]  
