@@ -1,6 +1,6 @@
 # spans [![GoDoc](https://pkg.go.dev/badge/github.com/byExist/spans.svg)](https://pkg.go.dev/github.com/byExist/spans) [![Go Report Card](https://goreportcard.com/badge/github.com/byExist/spans)](https://goreportcard.com/report/github.com/byExist/spans) 
 
-## What is spans?
+## What is "spans"?
 
 spans is a lightweight Go package that provides a convenient and Python-like interface for working with integer ranges (spans). It supports customizable start, stop, and step values, and includes a suite of utility functions for iteration, slicing, indexing, and more.
 
