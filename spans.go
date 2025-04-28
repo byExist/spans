@@ -7,17 +7,8 @@ import (
 )
 
 type (
-	// Span defines an interface for a range with a start, stop, and step value.
-	Span interface {
-		// Start returns the starting value of the span.
-		Start() int
-		// Stop returns the stopping value of the span.
-		Stop() int
-		// Step returns the step size of the span.
-		Step() int
-	}
-
-	span struct {
+	// Span represents a range of integers with a start, stop, and step.
+	Span struct {
 		start int
 		stop  int
 		step  int
@@ -25,23 +16,23 @@ type (
 )
 
 // Start returns the starting value of the span.
-func (i span) Start() int {
+func (i Span) Start() int {
 	return i.start
 }
 
 // Stop returns the stopping value of the span.
-func (i span) Stop() int {
+func (i Span) Stop() int {
 	return i.stop
 }
 
 // Step returns the step size of the span.
-func (i span) Step() int {
+func (i Span) Step() int {
 	return i.step
 }
 
 // To returns a Span starting at 0 and ending before the given stop value, with a step of 1.
 func To(stop int) Span {
-	return span{
+	return Span{
 		start: 0,
 		stop:  stop,
 		step:  1,
@@ -50,7 +41,7 @@ func To(stop int) Span {
 
 // Range returns a Span starting at the given start and ending before stop, with a step of 1.
 func Range(start, stop int) Span {
-	return span{
+	return Span{
 		start: start,
 		stop:  stop,
 		step:  1,
@@ -63,7 +54,7 @@ func Stride(start, stop, step int) Span {
 	if step == 0 {
 		panic("step cannot be zero")
 	}
-	return span{
+	return Span{
 		start: start,
 		stop:  stop,
 		step:  step,
@@ -137,16 +128,4 @@ func At(s Span, index int) (int, error) {
 		return 0, fmt.Errorf("index %d out of bounds [0, %d)", index, l)
 	}
 	return s.Start() + index*s.Step(), nil
-}
-
-// Slice returns a new Span that is a sub-span from index 'from' to 'to'.
-// Returns an error if indices are invalid.
-func Slice(s Span, from, to int) (Span, error) {
-	l := Len(s)
-	if from < 0 || to > l || from > to {
-		return nil, fmt.Errorf("invalid slice indices [%d:%d] for length %d", from, to, l)
-	}
-	start := s.Start() + from*s.Step()
-	stop := s.Start() + to*s.Step()
-	return span{start: start, stop: stop, step: s.Step()}, nil
 }

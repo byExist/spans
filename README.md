@@ -12,7 +12,6 @@ spans is a lightweight Go package that provides a convenient and Python-like int
 - Check if an element is contained in a span
 - Get an element by index
 - Find the index of an element
-- Slice a span to create sub-spans
 
 ## Installation
 
@@ -49,18 +48,12 @@ func main() {
 	// Get a value at an index
 	val, _ := spans.At(s, 2)
 	fmt.Println("Value at index 2:", val)
-
-	// Slice the span
-	sub, _ := spans.Slice(s, 1, 3)
-	for v := range spans.Values(sub) {
-		fmt.Println("Sub-span value:", v)
-	}
 }
 ```
 
 ## Usage
 
-The spans package allows you to easily create and manipulate integer ranges with customizable start, stop, and step values. You can iterate over spans, check for element containment, retrieve elements by index, find element indices, and create sub-spans through slicing. This makes spans a versatile tool for range-based operations in Go.
+The spans package allows you to easily create and manipulate integer ranges with customizable start, stop, and step values. You can iterate over spans, check for element containment, retrieve elements by index, and find element indices. This makes spans a versatile tool for range-based operations in Go.
 
 ## API Overview
 
@@ -83,7 +76,6 @@ The spans package allows you to easily create and manipulate integer ranges with
 - Contains(s Span, elem int) bool  
 - Find(s Span, elem int) (int, error)  
 - At(s Span, index int) (int, error)  
-- Slice(s Span, from, to int) (Span, error)  
 
 ## License
 
