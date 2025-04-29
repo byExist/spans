@@ -35,6 +35,14 @@ func TestStride(t *testing.T) {
 	_ = spans.Stride(1, 10, 0)
 }
 
+func TestClone(t *testing.T) {
+	s := spans.Stride(0, 5, 1)
+	cloned := spans.Clone(s)
+	if cloned.Start() != s.Start() || cloned.Stop() != s.Stop() || cloned.Step() != s.Step() {
+		t.Errorf("Clone() = %+v, want same as original", cloned)
+	}
+}
+
 func TestValues(t *testing.T) {
 	tests := []struct {
 		s        spans.Span
@@ -183,6 +191,16 @@ func ExampleStride() {
 		fmt.Print(v, " ")
 	}
 	// Output: 2 5 8
+}
+
+// ExampleClone demonstrates usage of the Clone function.
+func ExampleClone() {
+	s := spans.Stride(0, 5, 1)
+	cloned := spans.Clone(s)
+	for v := range spans.Values(cloned) {
+		fmt.Print(v, " ")
+	}
+	// Output: 0 1 2 3 4
 }
 
 // ExampleValues demonstrates usage of the Values function.

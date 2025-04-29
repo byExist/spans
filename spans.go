@@ -61,6 +61,14 @@ func Stride(start, stop, step int) Span {
 	}
 }
 
+func Clone(s Span) Span {
+	return Span{
+		start: s.start,
+		stop:  s.stop,
+		step:  s.step,
+	}
+}
+
 func abs(x int) int {
 	if x < 0 {
 		return -x

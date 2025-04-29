@@ -71,6 +71,7 @@ The spans package allows you to easily create and manipulate integer ranges with
 
 ### Utilities
 
+- Clone(s Span) Span
 - Values(s Span) iter.Seq[int]  
 - Len(s Span) int  
 - Contains(s Span, elem int) bool  
