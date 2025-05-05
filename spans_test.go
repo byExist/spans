@@ -1,11 +1,37 @@
 package spans_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
 	"github.com/byExist/spans"
 )
+
+func TestSpanString(t *testing.T) {
+	s := spans.Stride(1, 5, 1)
+	expected := "Span(1, 5, 1)"
+	if s.String() != expected {
+		t.Errorf("String() = %q, want %q", s.String(), expected)
+	}
+}
+
+func TestSpanMarshalUnmarshalJSON(t *testing.T) {
+	original := spans.Stride(1, 5, 1)
+	data, err := json.Marshal(original)
+	if err != nil {
+		t.Fatalf("MarshalJSON failed: %v", err)
+	}
+
+	var decoded spans.Span
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		t.Fatalf("UnmarshalJSON failed: %v", err)
+	}
+
+	if decoded != original {
+		t.Errorf("Unmarshaled span = %+v, want %+v", decoded, original)
+	}
+}
 
 func TestTo(t *testing.T) {
 	s := spans.To(5)
@@ -164,6 +190,26 @@ func TestAt(t *testing.T) {
 			t.Errorf("At(%+v, %d) = %d, want %d", s, test.index, got, test.expected)
 		}
 	}
+}
+
+func ExampleSpan_String() {
+	s := spans.Stride(2, 8, 2)
+	fmt.Println(s.String())
+	// Output: Span(2, 8, 2)
+}
+
+func ExampleSpan_MarshalJSON() {
+	s := spans.Stride(0, 6, 2)
+	data, _ := json.Marshal(s)
+	fmt.Println(string(data))
+	// Output: [0,6,2]
+}
+
+func ExampleSpan_UnmarshalJSON() {
+	var s spans.Span
+	_ = json.Unmarshal([]byte(`[1,5,1]`), &s)
+	fmt.Println(s.String())
+	// Output: Span(1, 5, 1)
 }
 
 func ExampleTo() {

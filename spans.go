@@ -1,6 +1,9 @@
 package spans
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
 	"iter"
 )
 
@@ -26,6 +29,29 @@ func (i Span) Stop() int {
 // Step returns the step size of the span.
 func (i Span) Step() int {
 	return i.step
+}
+
+// String returns a string representation of the Span.
+func (s Span) String() string {
+	return fmt.Sprintf("Span(%d, %d, %d)", s.start, s.stop, s.step)
+}
+
+// MarshalJSON implements json.Marshaler.
+func (s Span) MarshalJSON() ([]byte, error) {
+	return json.Marshal([3]int{s.start, s.stop, s.step})
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (s *Span) UnmarshalJSON(data []byte) error {
+	var arr [3]int
+	if err := json.Unmarshal(data, &arr); err != nil {
+		return err
+	}
+	if arr[2] == 0 {
+		return errors.New("step cannot be zero")
+	}
+	s.start, s.stop, s.step = arr[0], arr[1], arr[2]
+	return nil
 }
 
 // To returns a Span starting at 0 and ending before the given stop value, with a step of 1.

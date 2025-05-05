@@ -85,6 +85,9 @@ Value at index 2: 4
 | `Start(s Span) int` | Returns the start value of the Span | O(1) |
 | `Stop(s Span) int` | Returns the stop value of the Span | O(1) |
 | `Step(s Span) int` | Returns the step value of the Span | O(1) |
+| `String() string` | Returns a string representation of the span (e.g., Span(0, 10, 2)) | O(1) |
+| `MarshalJSON() ([]byte, error)` | Serializes the span to JSON format as `[start, stop, step]` | O(1) |
+| `UnmarshalJSON([]byte) error` | Parses JSON array `[start, stop, step]` into a span | O(1) |
 
 ### Utilities
 
