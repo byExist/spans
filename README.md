@@ -2,7 +2,7 @@
 
 ## What is "spans"?
 
-spans is a lightweight Go package that provides a convenient and Python-like interface for working with integer ranges (spans). It supports customizable start, stop, and step values, and includes a suite of utility functions for iteration, slicing, indexing, and more.
+spans is a lightweight Go package that provides a convenient and Python-like interface for working with integer ranges (spans). It supports customizable start, stop, and step values, and includes a suite of utility functions for iteration, slicing, indexing, and more. Most operations, such as length checks, indexing, and containment tests, are constant time (O(1)), while iteration scales linearly with span size (O(n)).
 
 ## Features
 
@@ -59,24 +59,30 @@ The spans package allows you to easily create and manipulate integer ranges with
 
 ### Constructors
 
-- To(stop int) Span  
-- Range(start, stop int) Span  
-- Stride(start, stop, step int) Span  
+| Function | Description | Time Complexity |
+|----------|-------------|------------------|
+| `To(stop int)` | Creates a Span from 0 to stop (exclusive), step 1 | O(1) |
+| `Range(start, stop int)` | Creates a Span from start to stop (exclusive), step 1 | O(1) |
+| `Stride(start, stop, step int)` | Creates a Span from start to stop with given step | O(1) |
 
 ### Methods
 
-- Start(s Span) int
-- Stop(s Span) int
-- Step(s Span) int
+| Method | Description | Time Complexity |
+|--------|-------------|------------------|
+| `Start(s Span)` | Returns the start value of the Span | O(1) |
+| `Stop(s Span)` | Returns the stop value of the Span | O(1) |
+| `Step(s Span)` | Returns the step value of the Span | O(1) |
 
 ### Utilities
 
-- Clone(s Span) Span
-- Values(s Span) iter.Seq[int]  
-- Len(s Span) int  
-- Contains(s Span, elem int) bool  
-- Find(s Span, elem int) (int, error)  
-- At(s Span, index int) (int, error)  
+| Function | Description | Time Complexity |
+|----------|-------------|------------------|
+| `Clone(s Span)` | Returns a copy of the Span | O(1) |
+| `Values(s Span)` | Returns an iterator over the Span | O(n) |
+| `Len(s Span)` | Returns the number of elements in the Span | O(1) |
+| `Contains(s Span, elem int)` | Checks if a value is in the Span | O(1) |
+| `Find(s Span, elem int)` | Finds the index of a value in the Span | O(1) |
+| `At(s Span, index int)` | Returns the value at the given index | O(1) |
 
 ## License
 

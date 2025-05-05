@@ -69,13 +69,6 @@ func Clone(s Span) Span {
 	}
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 // Values returns an iterator that yields values in the span.
 func Values(s Span) iter.Seq[int] {
 	start, stop, step := s.Start(), s.Stop(), s.Step()
@@ -136,4 +129,11 @@ func At(s Span, index int) (int, error) {
 		return 0, fmt.Errorf("index %d out of bounds [0, %d)", index, l)
 	}
 	return s.Start() + index*s.Step(), nil
+}
+
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }

@@ -193,6 +193,27 @@ func ExampleStride() {
 	// Output: 2 5 8
 }
 
+// ExampleSpan_Start demonstrates usage of the Start method.
+func ExampleSpan_Start() {
+	s := spans.Stride(3, 10, 2)
+	fmt.Println(s.Start())
+	// Output: 3
+}
+
+// ExampleSpan_Stop demonstrates usage of the Stop method.
+func ExampleSpan_Stop() {
+	s := spans.Stride(3, 10, 2)
+	fmt.Println(s.Stop())
+	// Output: 10
+}
+
+// ExampleSpan_Step demonstrates usage of the Step method.
+func ExampleSpan_Step() {
+	s := spans.Stride(3, 10, 2)
+	fmt.Println(s.Step())
+	// Output: 2
+}
+
 // ExampleClone demonstrates usage of the Clone function.
 func ExampleClone() {
 	s := spans.Stride(0, 5, 1)
