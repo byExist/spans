@@ -129,12 +129,12 @@ func TestFind(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got, err := spans.Find(test.s, test.elem)
-		if (err == nil) != test.ok {
-			t.Errorf("Find(%+v, %d) error = %v, want ok=%v", test.s, test.elem, err, test.ok)
+		got, ok := spans.Find(test.s, test.elem)
+		if ok != test.ok {
+			t.Errorf("Find(%+v, %d) ok = %v, want %v", test.s, test.elem, ok, test.ok)
 			continue
 		}
-		if err == nil && got != test.expected {
+		if ok && got != test.expected {
 			t.Errorf("Find(%+v, %d) = %d, expected %d", test.s, test.elem, got, test.expected)
 		}
 	}
@@ -155,96 +155,83 @@ func TestAt(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got, err := spans.At(s, test.index)
-		if (err == nil) != test.ok {
-			t.Errorf("At(%+v, %d) error = %v, want ok=%v", s, test.index, err, test.ok)
+		got, ok := spans.At(s, test.index)
+		if ok != test.ok {
+			t.Errorf("At(%+v, %d) ok = %v, want %v", s, test.index, ok, test.ok)
 			continue
 		}
-		if err == nil && got != test.expected {
+		if ok && got != test.expected {
 			t.Errorf("At(%+v, %d) = %d, want %d", s, test.index, got, test.expected)
 		}
 	}
 }
 
-// ExampleTo demonstrates usage of the To function.
 func ExampleTo() {
-	s := spans.To(5)
+	s := spans.To(3)
 	for v := range spans.Values(s) {
 		fmt.Print(v, " ")
 	}
-	// Output: 0 1 2 3 4
+	// Output: 0 1 2
 }
 
-// ExampleRange demonstrates usage of the Range function.
 func ExampleRange() {
-	s := spans.Range(3, 6)
+	s := spans.Range(1, 4)
 	for v := range spans.Values(s) {
 		fmt.Print(v, " ")
 	}
-	// Output: 3 4 5
+	// Output: 1 2 3
 }
 
-// ExampleStride demonstrates usage of the Stride function.
 func ExampleStride() {
-	s := spans.Stride(2, 10, 3)
+	s := spans.Stride(0, 6, 2)
 	for v := range spans.Values(s) {
 		fmt.Print(v, " ")
 	}
-	// Output: 2 5 8
+	// Output: 0 2 4
 }
 
-// ExampleSpan_Start demonstrates usage of the Start method.
 func ExampleSpan_Start() {
-	s := spans.Stride(3, 10, 2)
-	fmt.Println(s.Start())
+	fmt.Println(spans.Stride(3, 10, 2).Start())
 	// Output: 3
 }
 
-// ExampleSpan_Stop demonstrates usage of the Stop method.
 func ExampleSpan_Stop() {
-	s := spans.Stride(3, 10, 2)
-	fmt.Println(s.Stop())
+	fmt.Println(spans.Stride(3, 10, 2).Stop())
 	// Output: 10
 }
 
-// ExampleSpan_Step demonstrates usage of the Step method.
 func ExampleSpan_Step() {
-	s := spans.Stride(3, 10, 2)
-	fmt.Println(s.Step())
+	fmt.Println(spans.Stride(3, 10, 2).Step())
 	// Output: 2
 }
 
-// ExampleClone demonstrates usage of the Clone function.
 func ExampleClone() {
-	s := spans.Stride(0, 5, 1)
+	s := spans.Stride(1, 5, 1)
 	cloned := spans.Clone(s)
 	for v := range spans.Values(cloned) {
 		fmt.Print(v, " ")
 	}
-	// Output: 0 1 2 3 4
+	// Output: 1 2 3 4
 }
 
-// ExampleValues demonstrates usage of the Values function.
 func ExampleValues() {
-	s := spans.Stride(0, 10, 2)
+	s := spans.Stride(1, 6, 2)
 	for v := range spans.Values(s) {
 		fmt.Print(v, " ")
 	}
-	// Output: 0 2 4 6 8
+	// Output: 1 3 5
 }
 
-// ExampleLen demonstrates usage of the Len function.
 func ExampleLen() {
-	fmt.Println(spans.Len(spans.To(5)))
-	fmt.Println(spans.Len(spans.Stride(5, 0, -1)))
+	fmt.Println(spans.Len(spans.Stride(0, 5, 2)))
+	fmt.Println(spans.Len(spans.Stride(5, 0, -2)))
 	// Output:
-	// 5
-	// 5
+	// 3
+	// 3
 }
 
-// ExampleContains demonstrates usage of the Contains function.
 func ExampleContains() {
-	s := spans.Stride(0, 10, 2)
+	s := spans.Stride(0, 6, 2)
 	fmt.Println(spans.Contains(s, 4))
 	fmt.Println(spans.Contains(s, 5))
 	// Output:
@@ -252,26 +239,28 @@ func ExampleContains() {
 	// false
 }
 
-// ExampleFind demonstrates usage of the Find function.
 func ExampleFind() {
 	s := spans.Stride(0, 10, 2)
-	i, _ := spans.Find(s, 6)
+	i, ok := spans.Find(s, 6)
 	fmt.Println(i)
-	_, err := spans.Find(s, 5)
-	fmt.Println(err != nil)
+	fmt.Println(ok)
+	_, ok = spans.Find(s, 5)
+	fmt.Println(ok)
 	// Output:
 	// 3
 	// true
+	// false
 }
 
-// ExampleAt demonstrates usage of the At function.
 func ExampleAt() {
 	s := spans.Stride(10, 20, 2)
-	v, _ := spans.At(s, 2)
+	v, ok := spans.At(s, 2)
 	fmt.Println(v)
-	_, err := spans.At(s, 10)
-	fmt.Println(err != nil)
+	fmt.Println(ok)
+	_, ok = spans.At(s, 10)
+	fmt.Println(ok)
 	// Output:
 	// 14
 	// true
+	// false
 }

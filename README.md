@@ -2,7 +2,11 @@
 
 ## What is "spans"?
 
-spans is a lightweight Go package that provides a convenient and Python-like interface for working with integer ranges (spans). It supports customizable start, stop, and step values, and includes a suite of utility functions for iteration, slicing, indexing, and more. Most operations, such as length checks, indexing, and containment tests, are constant time (O(1)), while iteration scales linearly with span size (O(n)).
+spans is a lightweight Go package that provides a convenient and Python-like interface for working with integer ranges (spans). It supports customizable start, stop, and step values, and includes a suite of utility functions for iteration, slicing, indexing, and more. 
+
+Most operations, such as length checks, indexing, and containment tests, are constant time (O(1)), while iteration scales linearly with span size (O(n)).
+
+This library is especially useful when you need fast and readable logic for checking inclusion in ranges — such as filtering Unicode ranges (e.g., Hangul syllables), validating character input, or managing ranges of numeric event codes. It provides an efficient alternative to manual condition checks or regular expressions in many contexts.
 
 ## Features
 
@@ -51,9 +55,18 @@ func main() {
 }
 ```
 
-## Usage
 
-The spans package allows you to easily create and manipulate integer ranges with customizable start, stop, and step values. You can iterate over spans, check for element containment, retrieve elements by index, and find element indices. This makes spans a versatile tool for range-based operations in Go.
+**Output:**
+```
+0
+2
+4
+6
+8
+Length: 5
+Contains 4? true
+Value at index 2: 4
+```
 
 ## API Overview
 
@@ -61,28 +74,28 @@ The spans package allows you to easily create and manipulate integer ranges with
 
 | Function | Description | Time Complexity |
 |----------|-------------|------------------|
-| `To(stop int)` | Creates a Span from 0 to stop (exclusive), step 1 | O(1) |
-| `Range(start, stop int)` | Creates a Span from start to stop (exclusive), step 1 | O(1) |
-| `Stride(start, stop, step int)` | Creates a Span from start to stop with given step | O(1) |
+| `To(stop int) Span` | Creates a Span from 0 to stop (exclusive), step 1 | O(1) |
+| `Range(start, stop int) Span` | Creates a Span from start to stop (exclusive), step 1 | O(1) |
+| `Stride(start, stop, step int) Span` | Creates a Span from start to stop with given step | O(1) |
 
 ### Methods
 
 | Method | Description | Time Complexity |
 |--------|-------------|------------------|
-| `Start(s Span)` | Returns the start value of the Span | O(1) |
-| `Stop(s Span)` | Returns the stop value of the Span | O(1) |
-| `Step(s Span)` | Returns the step value of the Span | O(1) |
+| `Start(s Span) int` | Returns the start value of the Span | O(1) |
+| `Stop(s Span) int` | Returns the stop value of the Span | O(1) |
+| `Step(s Span) int` | Returns the step value of the Span | O(1) |
 
 ### Utilities
 
 | Function | Description | Time Complexity |
 |----------|-------------|------------------|
-| `Clone(s Span)` | Returns a copy of the Span | O(1) |
-| `Values(s Span)` | Returns an iterator over the Span | O(n) |
-| `Len(s Span)` | Returns the number of elements in the Span | O(1) |
-| `Contains(s Span, elem int)` | Checks if a value is in the Span | O(1) |
-| `Find(s Span, elem int)` | Finds the index of a value in the Span | O(1) |
-| `At(s Span, index int)` | Returns the value at the given index | O(1) |
+| `Clone(s Span) Span` | Returns a copy of the Span | O(1) |
+| `Values(s Span) iter.Seq[int]` | Returns an iterator over the Span | O(n) |
+| `Len(s Span) int` | Returns the number of elements in the Span | O(1) |
+| `Contains(s Span, elem int) bool` | Checks if a value is in the Span | O(1) |
+| `Find(s Span, elem int) (int, bool)` | Finds the index of a value in the Span | O(1) |
+| `At(s Span, index int) (int, bool)` | Returns the value at the given index | O(1) |
 
 ## License
 

@@ -1,8 +1,6 @@
 package spans
 
 import (
-	"errors"
-	"fmt"
 	"iter"
 )
 
@@ -109,26 +107,26 @@ func Contains(s Span, elem int) bool {
 }
 
 // Find returns the index of the element in the span.
-// Returns an error if the element is not in the span.
-func Find(s Span, elem int) (int, error) {
+// Returns false if the element is not in the span.
+func Find(s Span, elem int) (int, bool) {
 	if !Contains(s, elem) {
-		return 0, errors.New("element not found in span")
+		return 0, false
 	}
 	start, step := s.Start(), s.Step()
 	if step > 0 {
-		return (elem - start) / step, nil
+		return (elem - start) / step, true
 	}
-	return (start - elem) / abs(step), nil
+	return (start - elem) / abs(step), true
 }
 
 // At returns the element at the given index in the span.
-// Returns an error if the index is out of bounds.
-func At(s Span, index int) (int, error) {
+// Returns false if the index is out of bounds.
+func At(s Span, index int) (int, bool) {
 	l := Len(s)
 	if index < 0 || index >= l {
-		return 0, fmt.Errorf("index %d out of bounds [0, %d)", index, l)
+		return 0, false
 	}
-	return s.Start() + index*s.Step(), nil
+	return s.Start() + index*s.Step(), true
 }
 
 func abs(x int) int {
