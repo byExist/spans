@@ -1,31 +1,23 @@
-# spans [![GoDoc](https://pkg.go.dev/badge/github.com/byExist/spans.svg)](https://pkg.go.dev/github.com/byExist/spans) [![Go Report Card](https://goreportcard.com/badge/github.com/byExist/spans)](https://goreportcard.com/report/github.com/byExist/spans) 
+# spans [![GoDoc](https://pkg.go.dev/badge/github.com/byExist/spans.svg)](https://pkg.go.dev/github.com/byExist/spans) [![Go Report Card](https://goreportcard.com/badge/github.com/byExist/spans)](https://goreportcard.com/report/github.com/byExist/spans)
 
-## What is "spans"?
+A minimal, Python-like span/range utility for integers in Go.
 
-spans is a lightweight Go package that provides a convenient and Python-like interface for working with integer ranges (spans). It supports customizable start, stop, and step values, and includes a suite of utility functions for iteration, slicing, indexing, and more. 
+The `spans` package provides an efficient and allocation-free way to represent ranges of integers. It supports slicing, indexing, containment, and iteration in O(1) time where possible, and is especially useful for Unicode filtering, numeric range matching, and logic replacement for manual loops.
 
-Most operations, such as length checks, indexing, and containment tests, are constant time (O(1)), while iteration scales linearly with span size (O(n)).
+---
 
-This library is especially useful when you need fast and readable logic for checking inclusion in ranges — such as filtering Unicode ranges (e.g., Hangul syllables), validating character input, or managing ranges of numeric event codes. It provides an efficient alternative to manual condition checks or regular expressions in many contexts.
+## ✨ Features
 
-## Features
+- ✅ Define spans with start, stop, and step
+- ✅ Allocation-free representation
+- ✅ Constant-time: `Len`, `Contains`, `At`, `Find`
+- ✅ Interoperable with `iter.Seq`
+- ❌ Immutable (no dynamic insertion/removal)
+- ❌ Integer-only (no float/string ranges)
 
-- Define spans with start, stop, and step
-- Iterate over spans using iter.Seq
-- Get the length of a span
-- Check if an element is contained in a span
-- Get an element by index
-- Find the index of an element
+---
 
-## Installation
-
-To install spans, use the following command:
-
-```bash
-go get github.com/byExist/spans
-```
-
-## Quick Start
+## 🧱 Example
 
 ```go
 package main
@@ -36,70 +28,75 @@ import (
 )
 
 func main() {
-	s := spans.Stride(0, 10, 2)
+	hangul := spans.Range(0xAC00, 0xD7A3 + 1)
 
-	// Iterate over the span
-	for v := range spans.Values(s) {
-		fmt.Println(v)
-	}
+	ch := '강'
+	fmt.Printf("'%c' (%U) is Hangul? %v\n", ch, ch, spans.Contains(hangul, int(ch)))
 
-	// Get the length of the span
-	fmt.Println("Length:", spans.Len(s))
-
-	// Check if a value is in the span
-	fmt.Println("Contains 4?", spans.Contains(s, 4))
-
-	// Get a value at an index
-	val, _ := spans.At(s, 2)
-	fmt.Println("Value at index 2:", val)
+	ch = 'A'
+	fmt.Printf("'%c' (%U) is Hangul? %v\n", ch, ch, spans.Contains(hangul, int(ch)))
 }
 ```
 
-
-**Output:**
-```
-0
-2
-4
-6
-8
-Length: 5
-Contains 4? true
-Value at index 2: 4
+```go
+// Using Stride to generate even numbers from 0 to 10
+evens := spans.Stride(0, 10, 2)
+for _, v := range spans.Values(evens) {
+    fmt.Println(v)
+}
 ```
 
-## API Overview
+---
 
-### Constructors
+## 📚 Use When
 
-| Function | Description | Time Complexity |
-|----------|-------------|------------------|
-| `To(stop int) Span` | Creates a Span from 0 to stop (exclusive), step 1 | O(1) |
-| `Range(start, stop int) Span` | Creates a Span from start to stop (exclusive), step 1 | O(1) |
-| `Stride(start, stop, step int) Span` | Creates a Span from start to stop with given step | O(1) |
+- You need efficient range checking or indexing
+- You want a zero-allocation alternative to slices
+- You work with Unicode, event codes, or numeric classes
 
-### Methods
+---
 
-| Method | Description | Time Complexity |
-|--------|-------------|------------------|
-| `Start(s Span) int` | Returns the start value of the Span | O(1) |
-| `Stop(s Span) int` | Returns the stop value of the Span | O(1) |
-| `Step(s Span) int` | Returns the step value of the Span | O(1) |
-| `String() string` | Returns a string representation of the span (e.g., Span(0, 10, 2)) | O(1) |
-| `MarshalJSON() ([]byte, error)` | Serializes the span to JSON format as `[start, stop, step]` | O(1) |
-| `UnmarshalJSON([]byte) error` | Parses JSON array `[start, stop, step]` into a span | O(1) |
+## 🚫 Avoid If
 
-### Utilities
+- You need dynamic range mutation
+- You want to hold non-integer values
+- You need interval trees or overlapping span logic
 
-| Function | Description | Time Complexity |
-|----------|-------------|------------------|
-| `Clone(s Span) Span` | Returns a copy of the Span | O(1) |
-| `Values(s Span) iter.Seq[int]` | Returns an iterator over the Span | O(n) |
-| `Len(s Span) int` | Returns the number of elements in the Span | O(1) |
-| `Contains(s Span, elem int) bool` | Checks if a value is in the Span | O(1) |
-| `Find(s Span, elem int) (int, bool)` | Finds the index of a value in the Span | O(1) |
-| `At(s Span, index int) (int, bool)` | Returns the value at the given index | O(1) |
+---
 
-## License
+## 📊 Performance
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+Benchmarked on Apple M1 Pro (darwin/arm64):
+
+| Operation   | Time (ns/op) | Allocations |
+|-------------|--------------|-------------|
+| Contains    | 2.13         | 0           |
+| Len         | 2.12         | 0           |
+| At          | 2.23         | 0           |
+| Find        | 2.52         | 0           |
+
+---
+
+## 🔍 API
+
+| Function | Description |
+|----------|-------------|
+| `To(stop)` | span from 0 to stop |
+| `Range(start, stop)` | span from start to stop |
+| `Stride(start, stop, step)` | span from start to stop with step |
+| `Len(span)` | number of elements |
+| `Contains(span, elem)` | test for membership |
+| `At(span, index)` | value at index |
+| `Find(span, value)` | index of value |
+| `Values(span)` | iterator over span |
+
+## ⚠️ Limitations
+
+- `step` must not be 0 (will panic)
+- `start`, `stop`, and `step` must define a finite sequence
+
+---
+
+## 🪪 License
+
+MIT License. See [LICENSE](LICENSE).

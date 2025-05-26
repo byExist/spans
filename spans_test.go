@@ -310,3 +310,31 @@ func ExampleAt() {
 	// true
 	// false
 }
+
+func BenchmarkContains(b *testing.B) {
+	s := spans.Stride(0, 1000, 2)
+	for i := 0; i < b.N; i++ {
+		spans.Contains(s, 500)
+	}
+}
+
+func BenchmarkLen(b *testing.B) {
+	s := spans.Stride(0, 1000, 2)
+	for i := 0; i < b.N; i++ {
+		spans.Len(s)
+	}
+}
+
+func BenchmarkAt(b *testing.B) {
+	s := spans.Stride(0, 1000, 2)
+	for i := 0; i < b.N; i++ {
+		spans.At(s, 500)
+	}
+}
+
+func BenchmarkFind(b *testing.B) {
+	s := spans.Stride(0, 1000, 2)
+	for i := 0; i < b.N; i++ {
+		spans.Find(s, 500)
+	}
+}
