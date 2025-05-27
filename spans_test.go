@@ -6,67 +6,51 @@ import (
 	"testing"
 
 	"github.com/byExist/spans"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSpanString(t *testing.T) {
 	s := spans.Stride(1, 5, 1)
-	expected := "Span(1, 5, 1)"
-	if s.String() != expected {
-		t.Errorf("String() = %q, want %q", s.String(), expected)
-	}
+	assert.Equal(t, "Span(1, 5, 1)", s.String())
 }
 
 func TestSpanMarshalUnmarshalJSON(t *testing.T) {
 	original := spans.Stride(1, 5, 1)
 	data, err := json.Marshal(original)
-	if err != nil {
-		t.Fatalf("MarshalJSON failed: %v", err)
-	}
+	assert.NoError(t, err)
 
 	var decoded spans.Span
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		t.Fatalf("UnmarshalJSON failed: %v", err)
-	}
+	assert.NoError(t, json.Unmarshal(data, &decoded))
 
-	if decoded != original {
-		t.Errorf("Unmarshaled span = %+v, want %+v", decoded, original)
-	}
+	assert.Equal(t, original, decoded)
 }
 
 func TestTo(t *testing.T) {
 	s := spans.To(5)
-	if s.Start() != 0 || s.Stop() != 5 || s.Step() != 1 {
-		t.Errorf("To(5) = %+v, want start=0, stop=5, step=1", s)
-	}
+	expected := spans.Stride(0, 5, 1)
+	assert.Equal(t, expected, s)
 }
 
 func TestRange(t *testing.T) {
 	s := spans.Range(2, 6)
-	if s.Start() != 2 || s.Stop() != 6 || s.Step() != 1 {
-		t.Errorf("Range(2, 6) = %+v, want start=2, stop=6, step=1", s)
-	}
+	expected := spans.Stride(2, 6, 1)
+	assert.Equal(t, expected, s)
 }
 
 func TestStride(t *testing.T) {
 	s := spans.Stride(3, 9, 2)
-	if s.Start() != 3 || s.Stop() != 9 || s.Step() != 2 {
-		t.Errorf("Stride(3, 9, 2) = %+v, want start=3, stop=9, step=2", s)
-	}
+	expected := spans.Stride(3, 9, 2)
+	assert.Equal(t, expected, s)
 
-	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("Stride with step 0 did not panic")
-		}
-	}()
-	_ = spans.Stride(1, 10, 0)
+	assert.Panics(t, func() {
+		_ = spans.Stride(1, 10, 0)
+	})
 }
 
 func TestClone(t *testing.T) {
 	s := spans.Stride(0, 5, 1)
 	cloned := spans.Clone(s)
-	if cloned.Start() != s.Start() || cloned.Stop() != s.Stop() || cloned.Step() != s.Step() {
-		t.Errorf("Clone() = %+v, want same as original", cloned)
-	}
+	assert.Equal(t, cloned, s)
 }
 
 func TestValues(t *testing.T) {
@@ -81,19 +65,11 @@ func TestValues(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		var got []int
+		got := make([]int, 0)
 		for v := range spans.Values(test.s) {
 			got = append(got, v)
 		}
-		if len(got) != len(test.expected) {
-			t.Errorf("Values(%+v) = %v, expected %v", test.s, got, test.expected)
-			continue
-		}
-		for i := range got {
-			if got[i] != test.expected[i] {
-				t.Errorf("Values(%+v)[%d] = %d, expected %d", test.s, i, got[i], test.expected[i])
-			}
-		}
+		assert.Equal(t, test.expected, got)
 	}
 }
 
@@ -110,9 +86,7 @@ func TestLen(t *testing.T) {
 
 	for _, test := range tests {
 		got := spans.Len(test.s)
-		if got != test.expected {
-			t.Errorf("Len(%+v) = %d, expected %d", test.s, got, test.expected)
-		}
+		assert.Equal(t, test.expected, got)
 	}
 }
 
@@ -133,9 +107,7 @@ func TestContains(t *testing.T) {
 
 	for _, test := range tests {
 		got := spans.Contains(test.s, test.elem)
-		if got != test.expected {
-			t.Errorf("Contains(%+v, %d) = %v, expected %v", test.s, test.elem, got, test.expected)
-		}
+		assert.Equal(t, test.expected, got)
 	}
 }
 
@@ -156,12 +128,9 @@ func TestFind(t *testing.T) {
 
 	for _, test := range tests {
 		got, ok := spans.Find(test.s, test.elem)
-		if ok != test.ok {
-			t.Errorf("Find(%+v, %d) ok = %v, want %v", test.s, test.elem, ok, test.ok)
-			continue
-		}
-		if ok && got != test.expected {
-			t.Errorf("Find(%+v, %d) = %d, expected %d", test.s, test.elem, got, test.expected)
+		assert.Equal(t, test.ok, ok)
+		if ok {
+			assert.Equal(t, test.expected, got)
 		}
 	}
 }
@@ -182,12 +151,9 @@ func TestAt(t *testing.T) {
 
 	for _, test := range tests {
 		got, ok := spans.At(s, test.index)
-		if ok != test.ok {
-			t.Errorf("At(%+v, %d) ok = %v, want %v", s, test.index, ok, test.ok)
-			continue
-		}
-		if ok && got != test.expected {
-			t.Errorf("At(%+v, %d) = %d, want %d", s, test.index, got, test.expected)
+		assert.Equal(t, test.ok, ok)
+		if ok {
+			assert.Equal(t, test.expected, got)
 		}
 	}
 }
