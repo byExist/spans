@@ -85,6 +85,7 @@ func Stride(start, stop, step int) Span {
 	}
 }
 
+// Clone creates a copy of the given Span.
 func Clone(s Span) Span {
 	return Span{
 		start: s.start,
